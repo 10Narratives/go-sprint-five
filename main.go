@@ -150,7 +150,11 @@ type Swimming struct {
 // длина_бассейна * количество_пересечений / м_в_км / продолжительность_тренировки
 // Это переопределенный метод Calories() из Training.
 func (s Swimming) meanSpeed() float64 {
-	return float64(s.LengthPool) * float64(s.CountPool) / MInKm / s.Duration.Hours()
+	totalMeanSpeed := 0.0
+	if s.Duration.Hours() > 0 {
+		totalMeanSpeed = float64(s.LengthPool) * float64(s.CountPool) / MInKm / s.Duration.Hours()
+	}
+	return totalMeanSpeed
 }
 
 // Calories возвращает количество калорий, потраченных при плавании.
@@ -169,7 +173,9 @@ func (s Swimming) TrainingInfo() InfoMessage {
 
 // ReadData возвращает информацию о проведенной тренировке.
 func ReadData(training CaloriesCalculator) string {
+	spentCalories := training.Calories()
 	info := training.TrainingInfo()
+	info.Calories = spentCalories
 	return fmt.Sprint(info)
 }
 
